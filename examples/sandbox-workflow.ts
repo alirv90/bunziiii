@@ -142,7 +142,7 @@ const report = createSandboxStep({
   }),
 });
 
-const numberReviewSandbox = createSandboxWorkflow({
+export const numberReviewSandbox = createSandboxWorkflow({
   id: "number-review-sandbox",
   inputSchema: z.object({ value: z.number().int() }),
   outputSchema: z.object({ verdict: z.string() }),
@@ -166,10 +166,12 @@ const numberReviewSandbox = createSandboxWorkflow({
   .then(report)
   .commit();
 
-const mastra = new Mastra({
+export const mastra = new Mastra({
   workflows: { numberReviewSandbox },
   storage: new LibSQLStore({ id: "sbx-store", url: ":memory:" }),
 });
+
+export { runtime };
 
 async function runOnce(label: string, value: number) {
   console.log(`\n=== ${label} (input value=${value}) ===`);
@@ -198,10 +200,12 @@ async function runOnce(label: string, value: number) {
   console.log("unexpected:", result);
 }
 
-try {
-  await runOnce("Run 1: small (auto-approved)", 7);
-  await runOnce("Run 2: composite (auto-approved)", 21);
-  await runOnce("Run 3: prime (suspend \u2192 resume)", 97);
-} finally {
-  runtime.dispose();
+if (import.meta.main) {
+  try {
+    await runOnce("Run 1: small (auto-approved)", 7);
+    await runOnce("Run 2: composite (auto-approved)", 21);
+    await runOnce("Run 3: prime (suspend \u2192 resume)", 97);
+  } finally {
+    runtime.dispose();
+  }
 }
