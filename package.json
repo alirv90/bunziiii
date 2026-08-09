@@ -10,8 +10,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@jitl/quickjs-ng-wasmfile-release-asyncify": "^0.32.0",
     "@mastra/core": "^1.25.0",
     "@mastra/libsql": "^1.8.1",
+    "quickjs-emscripten": "^0.32.0",
     "zod": "^4.3.6"
   }
 }
